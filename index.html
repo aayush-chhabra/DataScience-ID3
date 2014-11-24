@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/strathausen/dracula/master/source/dracula_graph.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/DmitryBaranovskiy/raphael/master/raphael-min.js"></script>
+    <script type="text/javascript" src="http://sigmajs.org/js/sigma.min.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/strathausen/dracula/master/js/dracula_graffle.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/strathausen/dracula/master/js/dracula_graph.js"></script>
+    <script type="text/javascript" src="https://raw.github.com/strathausen/dracula/master/js/dracula_algorithms.js"></script>
+    <script type="text/javascript" src="js/examples.js"></script>
+    <script type="text/javascript" src="js/tic-tac-examples.js"></script>
+    <script type="text/javascript" src="js/voting-examples.js"></script>
+    <script src="http://d3js.org/d3.v2.js"></script>
+    <script type="text/javascript" src="js/id3.js"></script>
+    <script type='text/javascript' src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}'></script>
+    <script src="bower_components/platform/platform.js"></script>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="theme.css">
+    <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
+    <link rel="import" href="bower_components/paper-tabs/paper-tab.html">
+
+    <script type="text/javascript">
+        $(function () {
+            $('#container').highcharts({
+                chart: {
+                    type: 'bar'
+                },
+                title: {
+                    text: 'Resultant Accuracy of the Decision Tree (ID3)'
+                },
+                subtitle: {
+                    text: 'Overall and According to Genres'
+                },
+                xAxis: {
+                    categories: ['Overall', 'Action', 'Drama', 'Family', 'Comedy', 'Thriller'],
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Accuracy of the Decision Tree (%)',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ' millions'
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    x: -40,
+                    y: 100,
+                    floating: true,
+                    borderWidth: 1,
+                    backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                    shadow: true
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Accuracy',
+                    data: [85, 80, 100, 100, 50, 100]
+                }]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            console.log('all systems go');
+            $("#fire_tic_tac_toe").click(function(e) {
+                alert("Hello");
+                e.preventDefault();
+                var testModel = id3(examples, 'Result', features);
+                drawGraph(testModel, 'canvas');
+                renderSamples(samples,$("#samples"),testModel,'Result',features);
+                renderTrainingData(examples,$("#training"),'Result',features);
+            });
+
+            $("#fire_voting").click(function(e) {
+                e.preventDefault();
+                var testModel = id3(voting_examples, 'classification', voting_features);
+                drawGraph(testModel, 'canvas');
+                renderSamples(voting_samples, $("#samples"), testModel, 'classification', voting_features);
+                renderTrainingData(voting_examples, $("#training"), 'classification', voting_features);
+            });
+
+
+            $("#fire_tennis").click(function(e) {
+                e.preventDefault();
+                var testModel = id3(examples, 'Survived', features);
+                drawGraph(testModel, 'canvas');
+                //renderSamples(samples,$("#samples"),testModel,'play',features);
+                //renderTrainingData(examples,$("#training"),'play',features);
+                console.log("error");
+                //console.log(calcError(samples,testModel,'play'));
+            });
+        });
+    </script>
+</head>
+
+<body touch-action="auto">
+    <core-header-panel>
+        <div class="core-header">
+            <collapse-toolbar query="max-width: 767px">
+
+                <div class="logo nocollapse font-special">
+                    <a href="#">ID3 Analysis</a>
+                </div>
+
+                <div id="main">
+                    
+                    <paper-tabs selected="0">
+                      <paper-tab id="fire_tennis" >Titanic Test</paper-tab>
+                      <paper-tab id="fire_voting">Sample Democrat Dataset</paper-tab>
+                      <paper-tab id="fire_tic_tac_toe">Movie DataSet</paper-tab>
+                    </paper-tabs>
+
+                    <div id="data-container">
+                        <div id='canvas'></div>
+                        <div>
+                            <h3>Sample Predictions</h3>
+                            <table id='samples'>
+                            </table>
+                            <h3>Training Data</h3>
+                            <table id='training'>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </collapse-toolbar>
+        </div>
+        <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+    </core-header-panel>
+</body>
+
+</html>
